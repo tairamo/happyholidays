@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)file:///Users/developer/Downloads/happy-holidays-aviation.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Holidays</title>
+  <link href="./Happy Holidays - Cirrus SR22 Edition_files/css2" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #0a0e1a 0%, #1a1f35 50%, #0d1220 100%);
+      font-family: 'Share Tech Mono', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+      padding: 20px 0;
+    }
+
+    /* Starfield background */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* Snowflakes */
+    #snowflakes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .snowflake {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      animation: snowfall linear infinite;
+    }
+
+    @keyframes snowfall {
+      0% { transform: translateY(-10vh) rotate(0deg); }
+      100% { transform: translateY(110vh) rotate(360deg); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* G1000-style MFD display */
+    .mfd-display {
+      background: #0a0f0a;
+      border-radius: 16px;
+      box-shadow: 
+        0 0 0 4px #1a1a1a,
+        0 0 0 6px #333,
+        0 0 40px rgba(0, 255, 136, 0.2),
+        inset 0 0 60px rgba(0, 50, 0, 0.3);
+      overflow: hidden;
+      max-width: 720px;
+      position: relative;
+    }
+
+    /* Bezel buttons */
+    .bezel-top, .bezel-bottom {
+      background: #1a1a1a;
+      padding: 8px 20px;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .bezel-btn {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 4px 12px;
+      color: #888;
+      font-size: 10px;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .bezel-btn.active {
+      color: #00ff88;
+      border-color: #00ff88;
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+    }
+
+    /* Screen content */
+    .screen {
+      padding: 20px;
+      background: radial-gradient(ellipse at center, #0d1a0d 0%, #050a05 100%);
+      border-top: 2px solid #333;
+      border-bottom: 2px solid #333;
+    }
+
+    /* Header strip */
+    .header-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #1a3a1a;
+      margin-bottom: 20px;
+    }
+
+    .cirrus-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: #00aaff;
+      letter-spacing: 3px;
+    }
+
+    .datetime {
+      color: #00ff88;
+      font-size: 12px;
+    }
+
+    .nav-source {
+      color: #ff8800;
+      font-size: 11px;
+    }
+
+    /* Flight plan style */
+    .flight-plan {
+      text-align: left;
+      margin: 20px 0;
+    }
+
+    .fp-header {
+      color: #00aaff;
+      font-size: 11px;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    .fp-row {
+      display: flex;
+      padding: 8px 0;
+      border-bottom: 1px solid #1a2a1a;
+      opacity: 0;
+      animation: rowFadeIn 0.5s ease forwards;
+    }
+
+    .fp-row:nth-child(1) { animation-delay: 0.3s; }
+    .fp-row:nth-child(2) { animation-delay: 0.5s; }
+    .fp-row:nth-child(3) { animation-delay: 0.7s; }
+    .fp-row:nth-child(4) { animation-delay: 0.9s; }
+    .fp-row:nth-child(5) { animation-delay: 1.1s; }
+    .fp-row:nth-child(6) { animation-delay: 1.3s; }
+
+    @keyframes rowFadeIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .fp-waypoint {
+      width: 100px;
+      color: #00ff88;
+      font-weight: bold;
+    }
+
+    .fp-dtk {
+      width: 60px;
+      color: #00aaff;
+    }
+
+    .fp-dis {
+      width: 60px;
+      color: #ffaa00;
+    }
+
+    .fp-alt {
+      width: 80px;
+      color: #ff6688;
+    }
+
+    .fp-remarks {
+      flex: 1;
+      color: #888;
+      font-size: 11px;
+      font-style: italic;
+    }
+
+    /* Big holiday message */
+    .holiday-display {
+      margin: 30px 0 20px;
+      position: relative;
+    }
+
+    .holiday-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 48px;
+      font-weight: 900;
+      color: #00ff88;
+      text-shadow: 
+        0 0 20px rgba(0, 255, 136, 0.8),
+        0 0 40px rgba(0, 255, 136, 0.4);
+      animation: glow 2s ease-in-out infinite;
+      letter-spacing: 4px;
+    }
+
+    @keyframes glow {
+      0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 136, 0.8), 0 0 40px rgba(0, 255, 136, 0.4); }
+      50% { text-shadow: 0 0 30px rgba(0, 255, 136, 1), 0 0 60px rgba(0, 170, 255, 0.6); }
+    }
+
+    .holiday-year {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 72px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00ff88 0%, #00aaff 50%, #ff6688 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-top: 10px;
+      letter-spacing: 8px;
+    }
+
+    /* Checklist style message */
+    .checklist {
+      background: rgba(0, 30, 0, 0.5);
+      border: 1px solid #1a3a1a;
+      border-radius: 8px;
+      padding: 15px 20px;
+      margin-top: 25px;
+      text-align: left;
+      opacity: 0;
+      animation: rowFadeIn 1s ease forwards 1.8s;
+    }
+
+    .checklist-title {
+      color: #ff8800;
+      font-size: 12px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #3a3a1a;
+      padding-bottom: 8px;
+    }
+
+    .checklist-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: 13px;
+    }
+
+    .checklist-label {
+      color: #ccc;
+    }
+
+    .checklist-value {
+      color: #00ff88;
+      font-weight: bold;
+    }
+
+    .checklist-value.caution {
+      color: #ffaa00;
+    }
+
+    /* Status bar */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #1a3a1a;
+      font-size: 11px;
+    }
+
+    .status-item {
+      color: #00ff88;
+    }
+
+    .status-item.caps {
+      color: #ff4444;
+      animation: capsFlash 1s infinite;
+    }
+
+    @keyframes capsFlash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* Floating elements */
+    .floating-plane {
+      position: fixed;
+      font-size: 24px;
+      opacity: 0.6;
+      animation: planeFly 15s linear infinite;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    @keyframes planeFly {
+      0% { transform: translate(-100px, 0) rotate(-5deg); }
+      100% { transform: translate(calc(100vw + 100px), -50px) rotate(-5deg); }
+    }
+
+    .floating-plane:nth-child(1) { top: 15%; animation-delay: 0s; }
+    .floating-plane:nth-child(2) { top: 35%; animation-delay: 5s; font-size: 18px; }
+    .floating-plane:nth-child(3) { top: 75%; animation-delay: 10s; font-size: 20px; }
+
+    /* Mobile responsive styles */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+        width: 100%;
+      }
+
+      .mfd-display {
+        border-radius: 10px;
+        max-width: 100%;
+      }
+
+      .screen {
+        padding: 12px;
+      }
+
+      .holiday-text {
+        font-size: 28px;
+        letter-spacing: 2px;
+      }
+
+      .holiday-year {
+        font-size: 42px;
+        letter-spacing: 4px;
+      }
+
+      .fp-row {
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .fp-waypoint {
+        width: 70px;
+        font-size: 12px;
+      }
+
+      .fp-dtk, .fp-dis, .fp-alt {
+        width: auto;
+        font-size: 11px;
+        padding-right: 8px;
+      }
+
+      .fp-remarks {
+        width: 100%;
+        font-size: 10px;
+        margin-top: 4px;
+      }
+
+      .bezel-btn {
+        padding: 4px 6px;
+        font-size: 8px;
+      }
+
+      .header-strip {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .cirrus-logo, .datetime, .nav-source {
+        font-size: 10px;
+      }
+
+      .checklist-item {
+        font-size: 11px;
+      }
+
+      .status-bar {
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+
+      .status-item {
+        font-size: 10px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .holiday-text {
+        font-size: 22px;
+      }
+
+      .holiday-year {
+        font-size: 32px;
+      }
+
+      .bezel-top, .bezel-bottom {
+        padding: 6px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Starfield -->
+  <div class="stars" id="stars"><div class="star" style="left: 48.4647%; top: 9.92373%; width: 1.26755px; height: 1.26755px; animation-delay: 0.415733s;"></div><div class="star" style="left: 24.0796%; top: 80.7107%; width: 2.23621px; height: 2.23621px; animation-delay: 2.2615s;"></div><div class="star" style="left: 24.1578%; top: 12.918%; width: 1.54044px; height: 1.54044px; animation-delay: 1.22319s;"></div><div class="star" style="left: 69.28%; top: 12.6677%; width: 2.44328px; height: 2.44328px; animation-delay: 1.62135s;"></div><div class="star" style="left: 11.2162%; top: 15.1953%; width: 2.3105px; height: 2.3105px; animation-delay: 1.81156s;"></div><div class="star" style="left: 11.3692%; top: 68.2946%; width: 1.33755px; height: 1.33755px; animation-delay: 1.4865s;"></div><div class="star" style="left: 78.0365%; top: 36.4315%; width: 2.45999px; height: 2.45999px; animation-delay: 1.47918s;"></div><div class="star" style="left: 99.9848%; top: 95.8301%; width: 2.82165px; height: 2.82165px; animation-delay: 1.69273s;"></div><div class="star" style="left: 22.4656%; top: 41.9374%; width: 1.18966px; height: 1.18966px; animation-delay: 2.85853s;"></div><div class="star" style="left: 93.1128%; top: 82.043%; width: 1.74291px; height: 1.74291px; animation-delay: 1.1105s;"></div><div class="star" style="left: 84.7897%; top: 72.2062%; width: 2.1511px; height: 2.1511px; animation-delay: 2.97744s;"></div><div class="star" style="left: 83.0187%; top: 39.4937%; width: 1.84906px; height: 1.84906px; animation-delay: 2.59613s;"></div><div class="star" style="left: 29.0535%; top: 90.5636%; width: 1.27991px; height: 1.27991px; animation-delay: 2.64582s;"></div><div class="star" style="left: 8.68828%; top: 50.367%; width: 1.94506px; height: 1.94506px; animation-delay: 1.82046s;"></div><div class="star" style="left: 33.3195%; top: 35.3764%; width: 1.77923px; height: 1.77923px; animation-delay: 1.64554s;"></div><div class="star" style="left: 86.7504%; top: 12.1373%; width: 2.10769px; height: 2.10769px; animation-delay: 2.43542s;"></div><div class="star" style="left: 65.7709%; top: 67.734%; width: 1.73532px; height: 1.73532px; animation-delay: 2.87607s;"></div><div class="star" style="left: 20.456%; top: 36.2314%; width: 2.02808px; height: 2.02808px; animation-delay: 1.75718s;"></div><div class="star" style="left: 30.5047%; top: 0.693963%; width: 1.54282px; height: 1.54282px; animation-delay: 1.16287s;"></div><div class="star" style="left: 54.638%; top: 12.5808%; width: 2.2363px; height: 2.2363px; animation-delay: 1.44285s;"></div><div class="star" style="left: 79.5858%; top: 65.6266%; width: 2.24146px; height: 2.24146px; animation-delay: 0.891407s;"></div><div class="star" style="left: 59.1865%; top: 45.8731%; width: 1.06099px; height: 1.06099px; animation-delay: 0.0529842s;"></div><div class="star" style="left: 47.6332%; top: 93.8605%; width: 1.69253px; height: 1.69253px; animation-delay: 1.05226s;"></div><div class="star" style="left: 60.0073%; top: 25.6988%; width: 1.50727px; height: 1.50727px; animation-delay: 1.22055s;"></div><div class="star" style="left: 48.8396%; top: 47.579%; width: 2.32492px; height: 2.32492px; animation-delay: 0.0895253s;"></div><div class="star" style="left: 48.3175%; top: 46.6358%; width: 1.57467px; height: 1.57467px; animation-delay: 2.06883s;"></div><div class="star" style="left: 25.9323%; top: 28.186%; width: 2.54353px; height: 2.54353px; animation-delay: 1.62446s;"></div><div class="star" style="left: 27.15%; top: 26.786%; width: 1.93371px; height: 1.93371px; animation-delay: 0.699139s;"></div><div class="star" style="left: 62.4858%; top: 34.4975%; width: 2.82058px; height: 2.82058px; animation-delay: 0.782849s;"></div><div class="star" style="left: 44.5978%; top: 56.0612%; width: 1.59139px; height: 1.59139px; animation-delay: 1.83467s;"></div><div class="star" style="left: 59.8219%; top: 91.4462%; width: 2.91242px; height: 2.91242px; animation-delay: 1.6547s;"></div><div class="star" style="left: 75.894%; top: 1.9817%; width: 2.50459px; height: 2.50459px; animation-delay: 1.69789s;"></div><div class="star" style="left: 85.5045%; top: 75.8239%; width: 2.65867px; height: 2.65867px; animation-delay: 2.96171s;"></div><div class="star" style="left: 21.6111%; top: 70.8942%; width: 2.97263px; height: 2.97263px; animation-delay: 1.83563s;"></div><div class="star" style="left: 4.11455%; top: 98.412%; width: 2.50924px; height: 2.50924px; animation-delay: 1.70555s;"></div><div class="star" style="left: 80.2561%; top: 24.655%; width: 2.6586px; height: 2.6586px; animation-delay: 1.61999s;"></div><div class="star" style="left: 43.8914%; top: 63.9869%; width: 1.3624px; height: 1.3624px; animation-delay: 2.13859s;"></div><div class="star" style="left: 17.7137%; top: 34.7284%; width: 1.11116px; height: 1.11116px; animation-delay: 1.28691s;"></div><div class="star" style="left: 60.2435%; top: 23.3765%; width: 2.91879px; height: 2.91879px; animation-delay: 1.08089s;"></div><div class="star" style="left: 96.0008%; top: 40.7356%; width: 2.54165px; height: 2.54165px; animation-delay: 1.08926s;"></div><div class="star" style="left: 38.0568%; top: 85.9555%; width: 2.58354px; height: 2.58354px; animation-delay: 0.308218s;"></div><div class="star" style="left: 42.5209%; top: 89.3763%; width: 1.40323px; height: 1.40323px; animation-delay: 2.57308s;"></div><div class="star" style="left: 22.9108%; top: 98.615%; width: 1.76771px; height: 1.76771px; animation-delay: 1.10923s;"></div><div class="star" style="left: 2.07303%; top: 49.3197%; width: 2.47519px; height: 2.47519px; animation-delay: 1.36996s;"></div><div class="star" style="left: 57.3424%; top: 30.7565%; width: 1.78969px; height: 1.78969px; animation-delay: 2.62285s;"></div><div class="star" style="left: 90.363%; top: 58.0505%; width: 2.0913px; height: 2.0913px; animation-delay: 1.49689s;"></div><div class="star" style="left: 43.9204%; top: 73.2359%; width: 1.11286px; height: 1.11286px; animation-delay: 0.522026s;"></div><div class="star" style="left: 99.3737%; top: 92.991%; width: 2.07212px; height: 2.07212px; animation-delay: 1.31598s;"></div><div class="star" style="left: 89.1248%; top: 45.4667%; width: 2.82162px; height: 2.82162px; animation-delay: 1.55438s;"></div><div class="star" style="left: 2.05268%; top: 17.1891%; width: 2.20752px; height: 2.20752px; animation-delay: 0.40565s;"></div><div class="star" style="left: 29.3618%; top: 35.7447%; width: 1.24852px; height: 1.24852px; animation-delay: 1.34192s;"></div><div class="star" style="left: 36.1233%; top: 72.26%; width: 2.51835px; height: 2.51835px; animation-delay: 2.9594s;"></div><div class="star" style="left: 18.7869%; top: 33.9708%; width: 1.08922px; height: 1.08922px; animation-delay: 1.47455s;"></div><div class="star" style="left: 18.5083%; top: 40.8306%; width: 1.0025px; height: 1.0025px; animation-delay: 0.410437s;"></div><div class="star" style="left: 10.3294%; top: 68.6953%; width: 1.79054px; height: 1.79054px; animation-delay: 0.592784s;"></div><div class="star" style="left: 59.4246%; top: 74.6586%; width: 1.28308px; height: 1.28308px; animation-delay: 1.33418s;"></div><div class="star" style="left: 42.9343%; top: 1.34583%; width: 2.96698px; height: 2.96698px; animation-delay: 2.51414s;"></div><div class="star" style="left: 7.64828%; top: 54.7174%; width: 1.34756px; height: 1.34756px; animation-delay: 2.52183s;"></div><div class="star" style="left: 65.2875%; top: 85.936%; width: 1.15156px; height: 1.15156px; animation-delay: 1.10877s;"></div><div class="star" style="left: 97.3628%; top: 97.9891%; width: 2.92512px; height: 2.92512px; animation-delay: 2.44835s;"></div><div class="star" style="left: 71.1216%; top: 40.0809%; width: 2.39567px; height: 2.39567px; animation-delay: 2.2498s;"></div><div class="star" style="left: 92.0223%; top: 76.8742%; width: 1.91058px; height: 1.91058px; animation-delay: 2.42428s;"></div><div class="star" style="left: 52.1838%; top: 40.6511%; width: 1.10678px; height: 1.10678px; animation-delay: 2.35041s;"></div><div class="star" style="left: 13.0883%; top: 26.4948%; width: 1.18896px; height: 1.18896px; animation-delay: 2.90945s;"></div><div class="star" style="left: 48.3189%; top: 96.4099%; width: 2.06476px; height: 2.06476px; animation-delay: 1.01717s;"></div><div class="star" style="left: 16.9203%; top: 44.9127%; width: 1.1123px; height: 1.1123px; animation-delay: 2.35206s;"></div><div class="star" style="left: 67.947%; top: 24.3665%; width: 2.11677px; height: 2.11677px; animation-delay: 2.67845s;"></div><div class="star" style="left: 14.0808%; top: 57.1372%; width: 2.5446px; height: 2.5446px; animation-delay: 0.742061s;"></div><div class="star" style="left: 27.1323%; top: 84.3461%; width: 2.02519px; height: 2.02519px; animation-delay: 2.03092s;"></div><div class="star" style="left: 74.2616%; top: 20.6868%; width: 2.73124px; height: 2.73124px; animation-delay: 2.22073s;"></div><div class="star" style="left: 71.792%; top: 58.0808%; width: 2.78066px; height: 2.78066px; animation-delay: 0.252733s;"></div><div class="star" style="left: 20.0045%; top: 56.2607%; width: 1.38604px; height: 1.38604px; animation-delay: 2.44383s;"></div><div class="star" style="left: 16.9162%; top: 90.148%; width: 2.88414px; height: 2.88414px; animation-delay: 0.328742s;"></div><div class="star" style="left: 32.7399%; top: 32.9531%; width: 2.52687px; height: 2.52687px; animation-delay: 0.741096s;"></div><div class="star" style="left: 41.7921%; top: 78.7929%; width: 2.12027px; height: 2.12027px; animation-delay: 0.389246s;"></div><div class="star" style="left: 35.2919%; top: 4.77939%; width: 1.25129px; height: 1.25129px; animation-delay: 1.45561s;"></div><div class="star" style="left: 47.9066%; top: 56.7294%; width: 2.4281px; height: 2.4281px; animation-delay: 2.11954s;"></div><div class="star" style="left: 49.614%; top: 50.3885%; width: 1.29637px; height: 1.29637px; animation-delay: 1.62521s;"></div><div class="star" style="left: 11.2449%; top: 70.5119%; width: 2.21882px; height: 2.21882px; animation-delay: 1.6235s;"></div><div class="star" style="left: 36.6269%; top: 74.4224%; width: 1.28845px; height: 1.28845px; animation-delay: 2.29811s;"></div><div class="star" style="left: 37.5063%; top: 2.96888%; width: 1.1711px; height: 1.1711px; animation-delay: 0.543316s;"></div><div class="star" style="left: 33.9748%; top: 32.5327%; width: 2.63698px; height: 2.63698px; animation-delay: 2.4591s;"></div><div class="star" style="left: 79.8006%; top: 97.2318%; width: 1.41126px; height: 1.41126px; animation-delay: 2.33533s;"></div><div class="star" style="left: 75.7782%; top: 47.5998%; width: 2.13551px; height: 2.13551px; animation-delay: 2.88416s;"></div><div class="star" style="left: 69.1704%; top: 92.8938%; width: 2.66417px; height: 2.66417px; animation-delay: 1.48899s;"></div><div class="star" style="left: 52.8899%; top: 80.6952%; width: 2.2716px; height: 2.2716px; animation-delay: 0.949326s;"></div><div class="star" style="left: 12.7746%; top: 40.0809%; width: 2.50451px; height: 2.50451px; animation-delay: 2.67467s;"></div><div class="star" style="left: 24.5448%; top: 58.0033%; width: 1.45728px; height: 1.45728px; animation-delay: 1.12562s;"></div><div class="star" style="left: 53.5755%; top: 79.8516%; width: 1.34709px; height: 1.34709px; animation-delay: 0.914359s;"></div><div class="star" style="left: 58.248%; top: 18.5974%; width: 1.66252px; height: 1.66252px; animation-delay: 0.174822s;"></div><div class="star" style="left: 95.2303%; top: 20.609%; width: 2.78177px; height: 2.78177px; animation-delay: 2.59454s;"></div><div class="star" style="left: 75.4845%; top: 39.0584%; width: 2.3724px; height: 2.3724px; animation-delay: 1.45776s;"></div><div class="star" style="left: 73.8591%; top: 71.6997%; width: 2.50648px; height: 2.50648px; animation-delay: 0.0375386s;"></div><div class="star" style="left: 86.8257%; top: 66.476%; width: 1.84226px; height: 1.84226px; animation-delay: 0.575118s;"></div><div class="star" style="left: 21.9295%; top: 68.0073%; width: 1.13141px; height: 1.13141px; animation-delay: 2.99297s;"></div><div class="star" style="left: 6.80406%; top: 94.7935%; width: 2.29456px; height: 2.29456px; animation-delay: 1.79222s;"></div><div class="star" style="left: 2.1013%; top: 82.3448%; width: 1.1303px; height: 1.1303px; animation-delay: 0.889359s;"></div><div class="star" style="left: 89.9555%; top: 89.0174%; width: 2.16045px; height: 2.16045px; animation-delay: 0.474619s;"></div><div class="star" style="left: 16.4627%; top: 55.779%; width: 2.09109px; height: 2.09109px; animation-delay: 1.3592s;"></div><div class="star" style="left: 56.9514%; top: 93.1979%; width: 2.42915px; height: 2.42915px; animation-delay: 2.82598s;"></div></div>
+
+  <!-- Snowflakes -->
+  <div id="snowflakes"><div class="snowflake" style="left: 92.2778%; animation-duration: 10.3412s; animation-delay: 0.449974s; font-size: 14.5108px;">❄</div><div class="snowflake" style="left: 32.7054%; animation-duration: 11.44s; animation-delay: 0.77883s; font-size: 15.8824px;">❅</div><div class="snowflake" style="left: 89.6431%; animation-duration: 10.7365s; animation-delay: 9.8334s; font-size: 13.7331px;">✧</div><div class="snowflake" style="left: 21.7709%; animation-duration: 11.5656s; animation-delay: 1.70947s; font-size: 18.5421px;">✦</div><div class="snowflake" style="left: 34.2577%; animation-duration: 10.8983s; animation-delay: 8.11855s; font-size: 18.1898px;">❄</div><div class="snowflake" style="left: 22.4769%; animation-duration: 11.8503s; animation-delay: 0.468537s; font-size: 11.7894px;">✦</div><div class="snowflake" style="left: 84.3982%; animation-duration: 11.3873s; animation-delay: 6.01144s; font-size: 18.6267px;">✦</div><div class="snowflake" style="left: 76.0889%; animation-duration: 11.8784s; animation-delay: 9.94204s; font-size: 17.3027px;">✧</div><div class="snowflake" style="left: 3.95619%; animation-duration: 10.299s; animation-delay: 8.22785s; font-size: 19.745px;">❅</div><div class="snowflake" style="left: 83.1903%; animation-duration: 11.4717s; animation-delay: 2.70214s; font-size: 17.745px;">❅</div><div class="snowflake" style="left: 51.7824%; animation-duration: 8.09136s; animation-delay: 4.68664s; font-size: 13.7296px;">❆</div><div class="snowflake" style="left: 14.3028%; animation-duration: 9.09631s; animation-delay: 6.28347s; font-size: 18.8334px;">✦</div><div class="snowflake" style="left: 49.2584%; animation-duration: 8.85485s; animation-delay: 3.47199s; font-size: 17.9101px;">❆</div><div class="snowflake" style="left: 55.585%; animation-duration: 11.5955s; animation-delay: 7.36915s; font-size: 15.9205px;">❄</div><div class="snowflake" style="left: 12.0699%; animation-duration: 12.5434s; animation-delay: 9.34099s; font-size: 18.9863px;">✧</div><div class="snowflake" style="left: 75.4004%; animation-duration: 8.39028s; animation-delay: 7.41847s; font-size: 19.4567px;">❅</div><div class="snowflake" style="left: 95.0904%; animation-duration: 8.31746s; animation-delay: 3.90733s; font-size: 11.4515px;">❅</div><div class="snowflake" style="left: 66.1273%; animation-duration: 11.8338s; animation-delay: 2.67315s; font-size: 16.3322px;">✦</div><div class="snowflake" style="left: 49.7735%; animation-duration: 10.6333s; animation-delay: 7.68377s; font-size: 17.6219px;">✧</div><div class="snowflake" style="left: 91.8983%; animation-duration: 9.59381s; animation-delay: 7.70322s; font-size: 16.2481px;">✦</div><div class="snowflake" style="left: 6.76793%; animation-duration: 8.75807s; animation-delay: 2.33911s; font-size: 19.5915px;">✧</div><div class="snowflake" style="left: 7.05771%; animation-duration: 12.4194s; animation-delay: 9.75475s; font-size: 12.3515px;">✧</div><div class="snowflake" style="left: 69.3174%; animation-duration: 10.5791s; animation-delay: 1.12128s; font-size: 10.6451px;">❆</div><div class="snowflake" style="left: 25.4938%; animation-duration: 11.4253s; animation-delay: 9.68402s; font-size: 10.1176px;">❄</div><div class="snowflake" style="left: 30.0622%; animation-duration: 8.51653s; animation-delay: 5.25817s; font-size: 15.8541px;">❄</div><div class="snowflake" style="left: 48.683%; animation-duration: 10.3494s; animation-delay: 4.54151s; font-size: 11.9216px;">❄</div><div class="snowflake" style="left: 31.144%; animation-duration: 12.8754s; animation-delay: 7.43247s; font-size: 12.6438px;">❅</div><div class="snowflake" style="left: 1.08002%; animation-duration: 9.80113s; animation-delay: 0.296908s; font-size: 11.5135px;">✧</div><div class="snowflake" style="left: 89.7502%; animation-duration: 8.99128s; animation-delay: 7.46671s; font-size: 19.5961px;">❅</div><div class="snowflake" style="left: 85.7123%; animation-duration: 12.1024s; animation-delay: 5.25801s; font-size: 17.6544px;">❄</div><div class="snowflake" style="left: 85.8847%; animation-duration: 9.13608s; animation-delay: 0.824341s; font-size: 14.105px;">❆</div><div class="snowflake" style="left: 18.0933%; animation-duration: 10.9888s; animation-delay: 9.59041s; font-size: 15.2185px;">❄</div><div class="snowflake" style="left: 34.33%; animation-duration: 12.2736s; animation-delay: 8.0073s; font-size: 12.0395px;">✧</div><div class="snowflake" style="left: 39.2505%; animation-duration: 11.5344s; animation-delay: 9.50978s; font-size: 18.9708px;">✧</div><div class="snowflake" style="left: 60.986%; animation-duration: 9.4344s; animation-delay: 2.67249s; font-size: 18.9742px;">❆</div><div class="snowflake" style="left: 22.0901%; animation-duration: 9.33534s; animation-delay: 5.22312s; font-size: 10.2435px;">❆</div><div class="snowflake" style="left: 52.1098%; animation-duration: 11.6237s; animation-delay: 8.21903s; font-size: 15.0526px;">❆</div><div class="snowflake" style="left: 56.5942%; animation-duration: 8.13284s; animation-delay: 5.19349s; font-size: 17.1766px;">❆</div><div class="snowflake" style="left: 70.687%; animation-duration: 9.94631s; animation-delay: 2.15378s; font-size: 14.3933px;">❆</div><div class="snowflake" style="left: 76.002%; animation-duration: 12.1788s; animation-delay: 5.03913s; font-size: 14.2023px;">❄</div></div>
+
+  <!-- Flying planes -->
+  <div class="floating-plane">✈️</div>
+  <div class="floating-plane">🛩️</div>
+  <div class="floating-plane">✈️</div>
+
+  <div class="container">
+    <div class="mfd-display">
+      <div class="bezel-top">
+        <div class="bezel-btn">MAP</div>
+        <div class="bezel-btn">TFC</div>
+        <div class="bezel-btn active">FPL</div>
+        <div class="bezel-btn">PROC</div>
+        <div class="bezel-btn">WX</div>
+        <div class="bezel-btn">NRST</div>
+      </div>
+
+      <div class="screen">
+        <div class="header-strip">
+          <div class="cirrus-logo">SLEIGH1</div>
+          <div class="datetime">25 DEC 2025 | 00:00Z</div>
+          <div class="nav-source">GPS1 ENR</div>
+        </div>
+
+        <div class="flight-plan">
+          <div class="fp-header">━━ HOLIDAY FLIGHT PLAN ━━</div>
+          <div class="fp-row">
+            <span class="fp-waypoint">KXMAS</span>
+            <span class="fp-dtk">360°</span>
+            <span class="fp-dis">0 NM</span>
+            <span class="fp-alt">12000</span>
+            <span class="fp-remarks">// Departure: North Pole Intl</span>
+          </div>
+          <div class="fp-row">
+            <span class="fp-waypoint">SNOWW</span>
+            <span class="fp-dtk">180°</span>
+            <span class="fp-dis">185 NM</span>
+            <span class="fp-alt">10000</span>
+            <span class="fp-remarks">// FIKI engaged, TKS flowing</span>
+          </div>
+          <div class="fp-row">
+            <span class="fp-waypoint">CIDER</span>
+            <span class="fp-dtk">210°</span>
+            <span class="fp-dis">92 NM</span>
+            <span class="fp-alt">8000</span>
+            <span class="fp-remarks">// Hot cocoa at cruise</span>
+          </div>
+          <div class="fp-row">
+            <span class="fp-waypoint">JOLLY</span>
+            <span class="fp-dtk">195°</span>
+            <span class="fp-dis">67 NM</span>
+            <span class="fp-alt">6000</span>
+            <span class="fp-remarks">// Tailwind: 25 kts 🎅</span>
+          </div>
+          <div class="fp-row">
+            <span class="fp-waypoint">CHEER</span>
+            <span class="fp-dtk">175°</span>
+            <span class="fp-dis">43 NM</span>
+            <span class="fp-alt">3000</span>
+            <span class="fp-remarks">// Begin descent checklist</span>
+          </div>
+          <div class="fp-row">
+            <span class="fp-waypoint">KHOME</span>
+            <span class="fp-dtk">---</span>
+            <span class="fp-dis">0 NM</span>
+            <span class="fp-alt">DEST</span>
+            <span class="fp-remarks">// Family waiting on ramp 🎄</span>
+          </div>
+        </div>
+
+        <div class="holiday-display">
+          <div class="holiday-text">HAPPY HOLIDAYS</div>
+          <div class="holiday-year">2025</div>
+        </div>
+
+        <div class="checklist">
+          <div class="checklist-title">━━ HOLIDAY READINESS CHECK ━━</div>
+          <div class="checklist-item">
+            <span class="checklist-label">Eggnog reserves</span>
+            <span class="checklist-value">FULL</span>
+          </div>
+          <div class="checklist-item">
+            <span class="checklist-label">Cookie fuel</span>
+            <span class="checklist-value">92 GAL</span>
+          </div>
+          <div class="checklist-item">
+            <span class="checklist-label">Autopilot to party</span>
+            <span class="checklist-value">ENGAGED</span>
+          </div>
+          <div class="checklist-item">
+            <span class="checklist-label">New Year's resolution</span>
+            <span class="checklist-value caution">PENDING</span>
+          </div>
+        </div>
+
+        <div class="status-bar">
+          <span class="status-item">GS: 185 KTS</span>
+          <span class="status-item">FUEL: 92.0 GAL</span>
+          <span class="status-item">ETE: JOY+∞</span>
+          <span class="status-item caps">CAPS ARMED</span>
+        </div>
+      </div>
+
+      <div class="bezel-bottom">
+        <div class="bezel-btn">◄</div>
+        <div class="bezel-btn">MENU</div>
+        <div class="bezel-btn">CLR</div>
+        <div class="bezel-btn">ENT</div>
+        <div class="bezel-btn">►</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Generate stars
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.width = Math.random() * 2 + 1 + 'px';
+      star.style.height = star.style.width;
+      star.style.animationDelay = Math.random() * 3 + 's';
+      starsContainer.appendChild(star);
+    }
+
+    // Generate snowflakes
+    const snowContainer = document.getElementById('snowflakes');
+    const flakes = ['❄', '❅', '❆', '✧', '✦'];
+    for (let i = 0; i < 40; i++) {
+      const flake = document.createElement('div');
+      flake.className = 'snowflake';
+      flake.textContent = flakes[Math.floor(Math.random() * flakes.length)];
+      flake.style.left = Math.random() * 100 + '%';
+      flake.style.animationDuration = (Math.random() * 5 + 8) + 's';
+      flake.style.animationDelay = Math.random() * 10 + 's';
+      flake.style.fontSize = (Math.random() * 10 + 10) + 'px';
+      snowContainer.appendChild(flake);
+    }
+  </script>
+
+
+</body></html>
